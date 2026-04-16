@@ -140,9 +140,13 @@ useEffect(() => {
     return;
   }
   
-  console.log("Fetching from:", `${API_URL}/projects`);
+  // Remove trailing slash if it exists
+  const cleanURL = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+  const projectsURL = `${cleanURL}/projects`;
   
-  fetch(`${API_URL}/projects`)
+  console.log("Fetching from:", projectsURL);
+  
+  fetch(projectsURL)
     .then((res) => {
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
@@ -168,7 +172,8 @@ useEffect(() => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const response = await fetch(`${API_URL}/contact`, {
+    const cleanURL = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+    const response = await fetch(`${cleanURL}/contact`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
