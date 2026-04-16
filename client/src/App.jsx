@@ -134,12 +134,29 @@ function App() {
     message: ""
   });
 
-  useEffect(() => {
-    fetch(`${API_URL}/projects`)
-      .then((res) => res.json())
-      .then((data) => setProjects(data))
-      .catch((err) => console.error(err));
-  }, []);
+useEffect(() => {
+  if (!API_URL) {
+    console.error("API_URL is not defined in .env");
+    return;
+  }
+  
+  console.log("Fetching from:", `${API_URL}/projects`);
+  
+  fetch(`${API_URL}/projects`)
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      return res.json();
+    })
+    .then((data) => {
+      console.log("Projects loaded:", data);
+      setProjects(data);
+    })
+    .catch((err) => {
+      console.error("Failed to fetch projects:", err.message);
+    });
+}, [API_URL]);
 
   const handleChange = (e) => {
     setFormData({
